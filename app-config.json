@@ -1,0 +1,44 @@
+{
+  "scholar": {
+    "scholar_profil_fields": [
+      "name",
+      "scholar_id",
+      "email_domain",
+      "interests",
+      "citedby",
+      "cites_per_year",
+      "hindex",
+      "hindex5y",
+      "i10index",
+      "i10index5y",
+      "publications"
+    ],
+    "scholar_bib_fields": [
+      "title",
+      "pub_year",
+      "abstract",
+      "author"
+    ],
+    "scholar_pub_fields": ["cites_per_year", "url_related_articles"]
+  },
+  "scopus": {
+    "api_endpoint": "https://api.elsevier.com/content/search/scopus/",
+    "headers": {
+      "Accpet": "application/json",
+      "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+      "X-ELS-APIKey": "8ad5d8725aae057fcd97353d6c06004c"
+    },
+    "fields": [
+      "prism:url",
+      "eid",
+      "prism:publicationName",
+      "prism:issn",
+      "prism:volume",
+      "prism:issueIdentifier",
+      "prism:coverDate",
+      "prism:doi",
+      "prism:pageRange",
+      "citedby-count"
+    ]
+  }
+}
