@@ -1,8 +1,12 @@
+import os
 import json
 import time
 from scholarly import scholarly, ProxyGenerator
 from apiLayer import get_scopus_data
 from WOS import getWOS_data
+
+if not os.path.exists("output/"):
+    os.makedirs("output/")
 
 config = json.load(open('app-config.json', ))
 
