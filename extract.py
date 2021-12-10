@@ -2,19 +2,14 @@ import json
 import time
 from scholarly import scholarly, ProxyGenerator
 from apiLayer import get_scopus_data
+from WOS import getWOS_data
 
 config = json.load(open('app-config.json', ))
-pg = ProxyGenerator()
-success = pg.FreeProxies()
-scholarly.use_proxy(pg)
 
 
 def clean_author(author_obj, field_names, bib_names, scholar_pub_names):
     author = {}
     scrap_scholar_pubs(author_obj, bib_names, scholar_pub_names)
-
-    # # author_obj["publications"] = [pub["bib"]["title"]
-    # #                               for pub in author_obj["publications"]]
 
     for field in field_names:
         author[field] = author_obj[field]
@@ -23,8 +18,8 @@ def clean_author(author_obj, field_names, bib_names, scholar_pub_names):
 
 
 def scrap_scholar_pubs(author_obj, bib_names, scholar_pub_names):
-    for pub in author_obj["publications"]:
-        scholar_info = scholarly.fill(pub)
+    for pub_index in range(len(author_obj["publications"])):
+        scholar_info = scholarly.fill(author_obj["publications"][pub_index])
         info = {}
 
         for bib_name in bib_names:
@@ -39,8 +34,8 @@ def scrap_scholar_pubs(author_obj, bib_names, scholar_pub_names):
             except KeyError:
                 pass
 
-        pub = info
-        pub["author"] = pub["author"].split("and")
+        info["author"] = info["author"].split("and")
+        author_obj["publications"][pub_index] = info
 
 
 def scholar_scrap(author_name, field_names, bib_names, scholar_pub_names):
@@ -52,26 +47,29 @@ def scholar_scrap(author_name, field_names, bib_names, scholar_pub_names):
     return author
 
 
+# Scholar
 author = scholar_scrap(
     "imad hafidi",
     config["scholar"]["scholar_profil_fields"],
     config["scholar"]["scholar_bib_fields"],
     config["scholar"]["scholar_pub_fields"]
 )
-# author["publications"] = get_scopus_data(
-#     config["scopus"]["api_endpoint"],
-#     config["scopus"]["headers"],
-#     config["scopus"]["fields"],
-#     author["publications"]
-# )
 
-# scrap_scholar_pubs(
-#     author,
-#     config["scholar"]["scholar_bib_fields"],
-#     config["scholar"]["scholar_pub_fields"]
-# )
+# WOS
+author["publications"] = getWOS_data(
+    author["name"],
+    config["WOS"]["root"],
+    config["WOS"]["fields"],
+    author["publications"]
+)
+
+# Scopus
+author["publications"] = get_scopus_data(
+    config["scopus"]["api_endpoint"],
+    config["scopus"]["headers"],
+    config["scopus"]["fields"],
+    author["publications"]
+)
 
 with open("output/" + author["scholar_id"] + ".json", "w", encoding="UTF-8") as file:
-    json.dump(author, file)
-
-# file.write(str(str(json.dumps(author)).encode('UTF-8')))
+    json.dump(author, file, ensure_ascii=False)

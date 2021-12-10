@@ -1,17 +1,16 @@
 import requests
 
 
-def get_scopus_data(api_endpoint, headers, field_names, titles):
+def get_scopus_data(api_endpoint, headers, field_names, pubs):
     publications = []
-    for title in titles:
+    for pub in pubs:
         response = requests.get(
-            api_endpoint + '?query="' + title + '"&count=1', headers=headers)
+            api_endpoint + '?query=TITLE("' + pub["scholar_info"]["title"] + '")&count=1', headers=headers)
 
-        if "dc:title" in response.json()["search-results"]["entry"][0] and response.json()["search-results"]["entry"][0]["dc:title"] == title:
-            publications.append({
-                "title": title,
-                "scopus_info": clean_data(response.json()["search-results"]["entry"][0], field_names)
-            })
+        if "dc:title" in response.json()["search-results"]["entry"][0] and response.json()["search-results"]["entry"][0]["dc:title"].upper() == pub["scholar_info"]["title"].upper():
+            pub["scopus_info"] = clean_data(
+                response.json()["search-results"]["entry"][0], field_names)
+            publications.append(pub)
 
     return publications
 

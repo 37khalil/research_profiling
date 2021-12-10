@@ -13,13 +13,22 @@
       "i10index5y",
       "publications"
     ],
-    "scholar_bib_fields": [
-      "title",
-      "pub_year",
-      "abstract",
-      "author"
-    ],
-    "scholar_pub_fields": ["cites_per_year", "url_related_articles"]
+    "scholar_bib_fields": ["title", "pub_year", "abstract", "author"],
+    "scholar_pub_fields": ["cites_per_year"]
+  },
+  "WOS": {
+    "root": "https://guidejournal.net",
+    "fields": [
+      "SJR",
+      "Rank",
+      "Open Access",
+      "Quartile",
+      "P-ISSN",
+      "E-ISSN",
+      "Impact Factor",
+      "Category name",
+      "url"
+    ]
   },
   "scopus": {
     "api_endpoint": "https://api.elsevier.com/content/search/scopus/",
